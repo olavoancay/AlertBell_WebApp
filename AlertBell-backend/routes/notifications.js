@@ -23,4 +23,17 @@ router.get('/', async (req, res) => {
   }
 });
 
+// Rota para deletar uma notificação
+router.delete('/:id', async (req, res) => {
+  try {
+    const notif = await notification.findByIdAndDelete(req.params.id);
+    if (!notif) {
+      return res.status(404).send({ error: "Notificação não encontrada" });
+    }
+    res.status(200).json({message: "Notificação excluída com sucesso"}); // No Content
+  } catch (error) {
+    res.status(500).send(error);
+  }
+});
+
 module.exports = router;
