@@ -1,14 +1,24 @@
 const express = require('express');
 const router = express.Router();
-const notification = require('../models/notification.js');
+const moment = require('moment');
+const Notification = require('../models/notification'); // Importando o modelo corretamente
 
 // Rota para registrar nova notificação
 router.post('/', async (req, res) => {
   try {
-    const newNotification = new notification();
+    const { message } = req.body;
+    if (!message) {
+      return res.status(400).json({ error: 'Message is required' });
+    }
+    const newNotification = new Notification({
+      message,
+      date: moment().format('DD/MM/YYYY'), // Formatação da data
+      time: moment().format('HH:mm:ss'),    // Formatação do horário
+    });
     await newNotification.save();
     res.status(201).json({ message: 'Notification saved' });
   } catch (error) {
+    console.error(error);
     res.status(500).json({ error: 'Failed to save notification' });
   }
 });
@@ -16,9 +26,10 @@ router.post('/', async (req, res) => {
 // Rota para obter o histórico de notificações
 router.get('/', async (req, res) => {
   try {
-    const notifications = await notification.find().sort({ timestamp: -1 });
+    const notifications = await Notification.find().sort({ timestamp: -1 });
     res.status(200).json(notifications);
   } catch (error) {
+    console.error(error);
     res.status(500).json({ error: 'Failed to retrieve notifications' });
   }
 });
@@ -26,13 +37,14 @@ router.get('/', async (req, res) => {
 // Rota para deletar uma notificação
 router.delete('/:id', async (req, res) => {
   try {
-    const notif = await notification.findByIdAndDelete(req.params.id);
+    const notif = await Notification.findByIdAndDelete(req.params.id);
     if (!notif) {
-      return res.status(404).send({ error: "Notificação não encontrada" });
+      return res.status(404).json({ error: "Notificação não encontrada" });
     }
-    res.status(200).json({message: "Notificação excluída com sucesso"}); // No Content
+    res.status(200).json({ message: "Notificação excluída com sucesso" });
   } catch (error) {
-    res.status(500).send(error);
+    console.error(error);
+    res.status(500).json({ error: 'Failed to delete notification' });
   }
 });
 
