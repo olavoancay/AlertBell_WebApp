@@ -54,6 +54,12 @@
   flex: 1;
 }
 
+.notification-date {
+  font-size: 16px;
+  color: #fff;
+  padding-right: 10px;
+}
+
 .notification-time {
   font-size: 16px;
   color: #fff;

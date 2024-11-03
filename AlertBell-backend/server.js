@@ -1,4 +1,5 @@
 const express = require('express');
+const cors = require('cors');
 const dotenv = require('dotenv');
 const connectDB = require('./config/db');
 const notificationsRoute = require('./routes/notifications');
@@ -11,7 +12,11 @@ connectDB();
 
 // Iniciar o app
 const app = express();
+
+app.use(cors({ origin: 'http://localhost:3000' }));
+
 app.use(express.json());
+
 
 // Rotas
 app.use('/api/notifications', notificationsRoute);
