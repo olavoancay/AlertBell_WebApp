@@ -48,4 +48,35 @@ router.delete('/:id', async (req, res) => {
   }
 });
 
+router.get('/graph-data', async (req, res) => {
+  try {
+    const data = await Notification.aggregate([
+      {
+        $group: {
+          _id: '$message',
+          count: { $sum: 1 },
+        },
+      },
+    ]);
+
+    const graphData = {
+      'Presença Detectada': 0,
+      'Campainha Pressionada': 0,
+    };
+
+    data.forEach((item) => {
+      if (item._id === 'presença detectada') {
+        graphData['Presença Detectada'] = item.count;
+      } else if (item._id === 'campainha pressionada') {
+        graphData['Campainha Pressionada'] = item.count;
+      }
+    });
+
+    res.json(graphData);
+  } catch (error) {
+    console.error('Erro ao buscar dados para o gráfico:', error);
+    res.status(500).send('Erro ao buscar dados para o gráfico');
+  }
+});
+
 module.exports = router;

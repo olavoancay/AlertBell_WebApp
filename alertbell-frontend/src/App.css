@@ -4,7 +4,13 @@
   padding-top: 50px;
   color: white;
   font-family: Arial, sans-serif;
-  height: 100vh;
+  height: auto;
+}
+
+.main-notification-infos {
+  display: flex;
+  flex-direction: column;
+  text-align: center;
 }
 
 .main-notification {
@@ -14,17 +20,18 @@
   justify-content: center;
 }
 
-.main-notification-info {
-  display: flex;
-  flex-direction: column;
-}
-
 .main-notification-time {
-  font-size: 48px;
+  font-size: 24px;
   font-weight: bold;
   color: #ffffff;
   margin: 0;
   text-align: center;
+}
+
+.last-notification {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
 }
 
 .main-notification-text {

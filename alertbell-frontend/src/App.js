@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import './App.css';
+import Graph from './graph'
+
+
 
 const NotificationIcon = ({ name, color, size }) => (
   <span className="material-icons" style={{ color, fontSize: size || 24 }}>
@@ -53,31 +56,50 @@ const Notifications = () => {
         time: response.data.time,
       };
 
-      setNotifications((prev) => [...prev, newNotification]); // Adiciona a notificação retornada
+      setNotifications((prev) => [newNotification, ...prev]); // Adiciona a notificação no início da lista
       setNewMessage(''); // Limpa o campo de entrada
     } catch (error) {
       console.error('Erro ao adicionar notificação:', error);
     }
   };
 
+  // Se não houver notificações, renderizar nada
+  if (notifications.length === 0) return <div>Carregando notificações...</div>;
+
   return (
     <div className="container">
+
+      {/* Última notificação destacada */}
+      <div className="last-notification">
+        <div className="main-notification">
+          <NotificationIcon name="notifications" color="#fff" size={64} />
+          <div className='main-notification-infos'>
+            <span className="main-notification-time">{notifications[0].time}</span>
+            <span className="main-notification-date">{notifications[0].date}</span>
+            <span className="main-notification-title">{notifications[0].message}</span>
+          </div>
+        </div>
+      </div>
+
       <h1>Notificações</h1>
-      {/* Renderiza cada notificação usando NotificationItem */}
+
+      {/* Lista de notificações a partir do segundo item */}
       <div className="notifications-list">
-        {notifications.map((notification) => (
+        {notifications.slice(1).map((notification) => (
           <NotificationItem key={notification._id} item={notification} />
         ))}
       </div>
 
-      {/* Campo de entrada para nova notificação */}
-      <input
+
+      <Graph />
+    
+      {/*<input
         type="text"
         value={newMessage}
         onChange={(e) => setNewMessage(e.target.value)}
         placeholder="Digite sua nova notificação"
       />
-      <button onClick={addNotification}>Adicionar Notificação</button>
+      <button onClick={addNotification}>Adicionar Notificação</button>*/} 
     </div>
   );
 };
